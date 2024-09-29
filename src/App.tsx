@@ -1,8 +1,14 @@
+import Score from './components/Score'
 import World from './Experience/World'
 
 
 function App() {
-  return <World/>
+  return (
+    <>
+      <Score/>
+      <World/>
+    </>
+  )
 }
 
 export default App
