@@ -6,10 +6,25 @@ import Box from './Box'
 
 const World = () => {
   return (
-    <Canvas camera={{ position: [0,0,5], rotation: [0,0,0], fov: 60 }}  >
-      <color args={['#adc178']} attach='background' />
+    <Canvas 
+      camera={{ 
+        position: [0, 4.5, 4], 
+        rotation: [0, 0, 0], 
+        fov: 60 
+      }}  
+    >
+      <color args={['#adc173']} attach='background' />
+      <ambientLight intensity={2} />
       <OrbitControls enableDamping />
-      <Box/>
+      {[-1, 0, 1].map((d,i) => (
+        <Box key={i} position={{ x:d, y:0, z: -1 }} />
+      ))}
+      {[-1, 0, 1].map((d,i) => (
+        <Box key={i} position={{ x:d, y:0, z: 0 }} />
+      ))}
+      {[-1, 0, 1].map((d,i) => (
+        <Box key={i} position={{ x:d, y:0, z: 1 }} />
+      ))}
     </Canvas>
   )
 }
