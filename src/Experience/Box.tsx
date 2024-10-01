@@ -7,6 +7,9 @@ interface BoxProps {
   position: any
 }
 
+type MoleType = 'mole' | 'coin' | 'bomb';
+
+
 const Box = ({ position }: BoxProps) => {
   const boxRef = useRef<Mesh | null>(null);
   const capsuleRef = useRef<Mesh | null>(null);
@@ -14,6 +17,25 @@ const Box = ({ position }: BoxProps) => {
   const { point, setPoint } = useGameStore();
 
   const [isHit, setIsHit] = useState<boolean>(false);
+  const [moleType, setMoleType] = useState<MoleType>('mole')
+
+  const getRandomMole = () => {
+    const arr:MoleType[] = ['mole','bomb', 'mole', 'coin', 'mole', 'mole', 'mole'];
+    const random = arr[Math.floor( Math.random() * arr.length )];
+    setMoleType(random)
+  };
+
+  const getTypeColor = (type:MoleType): string => {
+    if(type == 'bomb') return '#000000'
+    else if ( type === 'coin') return '#ffd900'
+    else return '#9c5102'
+  };
+
+  const getPonts = (type:MoleType): number => {
+    if(type == 'bomb') return -2
+    else if ( type === 'coin') return 2 
+    else return 1
+  }
 
   const moleUp = () => {
     if(!boxRef.current || !capsuleRef.current) return;
@@ -44,21 +66,22 @@ const Box = ({ position }: BoxProps) => {
     if(isHit) return;
 
     setIsHit(true);
-    setPoint(point + 1);
+    const hitPoint = getPonts(moleType);
+    setPoint(point + hitPoint);
   }
 
   useEffect(() => {
     function triggerRandomly() {
-      const randomDelay = Math.random() * 6000 + 1000; // Random delay between 1 and 2 seconds
+      getRandomMole();
+      const randomDelay = Math.random() * 6000 + 1000;
       return setTimeout(() => {
         moleUp();
         triggerRandomly();
       }, randomDelay);
     }
 
-    const id = triggerRandomly(); // Start the initial call
+    const id = triggerRandomly();
 
-    // Optional: cleanup on component unmount
     return () => clearTimeout(id);
   }, []);
 
@@ -70,7 +93,7 @@ const Box = ({ position }: BoxProps) => {
         onClick={onHitMole}
       >
         <capsuleGeometry args={[0.2, 0.5, 12, 12]} />
-        <meshBasicMaterial color='red' />
+        <meshBasicMaterial color={getTypeColor(moleType)} />
       </mesh>
       <mesh 
         position={[position.x, position.y + 0.25, position.z]} 
