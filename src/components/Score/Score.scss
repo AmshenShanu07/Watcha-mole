@@ -1,11 +1,28 @@
 .scoreCon {
   position: absolute;
   top: 5%;
-  right: 5%;
+  width: calc(100% - 20px * 2);
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 20px;
+  // right: 5%;
   z-index: 1;
 
   h2 {
     font-family: "Press Start 2P", system-ui;
     color: #fff;
+  }
+}
+
+.startBtnCon {
+  position: absolute;
+  z-index: 1;
+  bottom: 30px;
+  left: 50%;
+  right: 50%;
+  
+  button {
+    width: 100px ;
+    height: 30px;
   }
 }

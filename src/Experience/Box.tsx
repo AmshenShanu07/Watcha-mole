@@ -1,6 +1,7 @@
-import gsap from 'gsap';
 import { useEffect, useRef, useState } from 'react';
 import { Mesh } from 'three';
+
+import gsap from 'gsap';
 import useGameStore from '../utils/useGameStore';
 
 interface BoxProps {
@@ -14,7 +15,7 @@ const Box = ({ position }: BoxProps) => {
   const boxRef = useRef<Mesh | null>(null);
   const capsuleRef = useRef<Mesh | null>(null);
 
-  const { point, setPoint } = useGameStore();
+  const { point, gameStart, setPoint } = useGameStore();
 
   const [isHit, setIsHit] = useState<boolean>(false);
   const [moleType, setMoleType] = useState<MoleType>('mole')
@@ -67,10 +68,15 @@ const Box = ({ position }: BoxProps) => {
 
     setIsHit(true);
     const hitPoint = getPonts(moleType);
+    console.log(hitPoint, point)
+    Rune.actions.onPointChange(hitPoint + point);
     setPoint(point + hitPoint);
+
   }
 
   useEffect(() => {
+    if(!gameStart) return;
+
     function triggerRandomly() {
       getRandomMole();
       const randomDelay = Math.random() * 6000 + 1000;
@@ -83,7 +89,7 @@ const Box = ({ position }: BoxProps) => {
     const id = triggerRandomly();
 
     return () => clearTimeout(id);
-  }, []);
+  }, [gameStart]);
 
   return (
     <>
@@ -99,7 +105,7 @@ const Box = ({ position }: BoxProps) => {
         position={[position.x, position.y + 0.25, position.z]} 
         ref={boxRef}
       >
-        <boxGeometry args={[1, 0.3, 1]} />
+        <boxGeometry args={[1, 0.5, 1]} />
         <meshBasicMaterial color='cyan' />
       </mesh>
     </>
